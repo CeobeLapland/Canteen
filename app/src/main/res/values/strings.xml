@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">校园食堂</string>
+<string name="nav_food">食品查询</string>
+<string name="nav_post">帖子广场</string>
+<string name="search_hint">搜索食品名称、标签…</string>
+<string name="publish_post">发布帖子</string>
+<string name="like">点赞</string>
+<string name="submit_comment">发送</string>
+<string name="anonymous">匿名</string>
+<string name="no_posts">暂无帖子，快来发第一条吧！</string>
+<string name="no_foods">未找到相关食品</string>
+<string name="rating_thanks">感谢您的评分！</string>
+<string name="delete_post_confirm">确定要删除这条帖子吗？</string>
+<string name="delete_comment_confirm">确定删除这条评论？</string>
+</resources>

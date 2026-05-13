@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        应用主题，继承自 Material3
+        colorPrimary / colorPrimaryVariant 决定 ActionBar、BottomNav 等组件的颜色
+    -->
+    <style name="Theme.CanteenApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <!-- BottomNavigationView 指示器颜色 -->
+        <item name="colorSecondaryVariant">@color/primary_light</item>
+
+
+        <!--<item name="windowActionBar">false</item>-->
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- 无 ActionBar 变体（若 Activity 自行管理标题栏） -->
+    <style name="Theme.CanteenApp.NoActionBar" parent="Theme.CanteenApp">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

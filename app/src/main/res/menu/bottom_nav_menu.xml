@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 底部导航菜单 -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 食品查询 Tab -->
+    <item
+        android:id="@+id/nav_food"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="食品查询"
+        android:orderInCategory="1"/>
+
+    <!-- 帖子广场 Tab -->
+    <item
+        android:id="@+id/nav_post"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="帖子广场"
+        android:orderInCategory="2"/>
+
+</menu>

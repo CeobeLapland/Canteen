@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    单条食品卡片布局
+    使用 MaterialCardView 提供阴影和圆角效果
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@android:color/white"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- 顶行：食品名称 + 价格 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:id="@+id/tv_food_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="食品名称"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <!-- 价格标签（橙色背景） -->
+            <TextView
+                android:id="@+id/tv_food_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥0.0"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/price_orange"
+                android:paddingStart="8dp"/>
+
+        </LinearLayout>
+
+        <!-- 位置信息 -->
+        <TextView
+            android:id="@+id/tv_food_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="东校区 > 第一食堂 > 1楼 > A01"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:drawablePadding="4dp"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- 评分行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:isIndicator="true"
+                android:progressTint="@color/star_yellow"/>
+
+            <TextView
+                android:id="@+id/tv_rating_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0人评价)"
+                android:textSize="11sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <!-- 标签行 -->
+        <TextView
+            android:id="@+id/tv_food_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="辣  套餐  热食"
+            android:textSize="11sp"
+            android:textColor="@color/tag_color"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

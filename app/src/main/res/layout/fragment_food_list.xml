@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    食品列表页面布局
+    结构：搜索栏（上） + RecyclerView（下，填满剩余空间）
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_grey">
+
+    <!-- 顶部标题栏区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/primary"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="食堂"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+            <!--android:gap="8dp"-->
+            <!-- 搜索输入框 -->
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:drawable/edit_text"
+                android:hint="输入搜索内容"
+                android:paddingHorizontal="8dp" />
+
+            <!-- 搜索按钮 -->
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="搜索" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 展开/收起 按钮 -->
+                <Button
+                    android:id="@+id/btn_toggle_campus"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="全部校区" />
+
+                <!-- 横向滚动的标签容器 -->
+                <HorizontalScrollView
+                    android:id="@+id/scroll_view_campus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/layout_tags_campus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:spacing="8dp" />
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 展开/收起 按钮 -->
+                <Button
+                    android:id="@+id/btn_toggle_canteen"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="全部食堂" />
+
+                <!-- 横向滚动的标签容器 -->
+                <HorizontalScrollView
+                    android:id="@+id/scroll_view_canteen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/layout_tags_canteen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:spacing="8dp" />
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- 展开/收起 按钮 -->
+                <Button
+                    android:id="@+id/btn_toggle_floor"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="全部楼层" />
+
+            <!-- 横向滚动的标签容器 -->
+            <HorizontalScrollView
+                android:id="@+id/scroll_view_floor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layout_tags_floor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:spacing="8dp" />
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 这里放你的列表，我用 RecyclerView 举例 -->
+        <!-- 食品列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_food"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
