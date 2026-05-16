@@ -14,13 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.canteen.R;
 import com.example.canteen.data.entity.Food;
 
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 食品列表 RecyclerView Adapter
  * 继承 ListAdapter（基于 DiffUtil），只更新变化的条目，避免整列刷新闪烁。
+ * 【已集成分页功能】
  */
 public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodViewHolder>
 {
-
     /** 点击监听接口 */
     public interface OnFoodClickListener {
         void onFoodClick(Food food);
@@ -31,6 +33,7 @@ public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodViewHolder>
     public FoodAdapter(OnFoodClickListener listener) {
         super(DIFF_CALLBACK);
         this.clickListener = listener;
+        System.out.println("FoodAdapter initialized with listener: " + listener);
     }
 
     // ── DiffUtil 回调：告诉 ListAdapter 如何比较条目 ──────
@@ -94,7 +97,6 @@ public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodViewHolder>
             tvName.setText(food.getName());
             tvLocation.setText(food.getFullLocation());
             tvPrice.setText(String.format("¥%.1f", food.getPrice()));
-            //tvTags.setText(food.getTags() != null ? food.getTags().replace(",", "  ") : "");
             // tags已经被改成List<String>了，直接join一下就行了
             tvTags.setText(food.getTags() != null ? String.join("  ", food.getTags()) : "");
             ratingBar.setRating(food.getAverageRating());
@@ -102,5 +104,21 @@ public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodViewHolder>
 
             itemView.setOnClickListener(v -> listener.onFoodClick(food));
         }
+    }
+
+    // 分页新增：是否正在加载（防止重复请求）
+    public boolean isLoading = false;
+    // 分页新增：是否还有更多数据
+    public boolean hasMore = true;
+
+    // ====================== 分页新增：初始化第一页数据 ======================
+    public void setNewList(List<Food> newData) {
+        hasMore = newData.size() >= 20; // 每页20条，不满则无更多数据
+    }
+
+    // ====================== 分页新增：追加下一页数据 ======================
+    public void addMoreList(List<Food> moreData) {
+        isLoading = false;
+        hasMore = moreData.size() >= 20;
     }
 }

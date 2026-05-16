@@ -21,6 +21,8 @@ import com.example.canteen.R;
 import com.example.canteen.data.entity.Campus;
 import com.example.canteen.data.entity.Canteen;
 import com.example.canteen.data.entity.Floor;
+
+import com.example.canteen.data.entity.Food;
 import com.example.canteen.viewmodel.FoodViewModel;
 
 
@@ -155,6 +157,13 @@ public class FoodListFragment extends Fragment {
     }
 
 
+
+
+    private RecyclerView recyclerView;
+    // 分页参数
+    private int currentPage = 1;    // 当前页码
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -163,7 +172,7 @@ public class FoodListFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(FoodViewModel.class);
 
         // ── RecyclerView 设置 ──────────────────────────────
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_food);
+        recyclerView = view.findViewById(R.id.recycler_food);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         adapter = new FoodAdapter(food -> {
@@ -175,9 +184,43 @@ public class FoodListFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        // 核心：滑动监听 → 自动加载下一页
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // 只监听向下滑动
+                if (dy <= 0) return;
+
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastVisible = manager.findLastCompletelyVisibleItemPosition();
+                int totalCount = manager.getItemCount();
+
+                // 判断：未加载 + 有更多数据 + 滑到底部附近
+                if (!adapter.isLoading && adapter.hasMore && lastVisible >= totalCount - 2) {
+                    adapter.isLoading = true; // 标记加载中
+                    currentPage++; // 页码+1
+                    //loadFoodData(currentPage); // 请求下一页
+                    viewModel.addPage(currentPage);
+                }
+            }
+        });
+        // 首次加载第一页
+        //loadFoodData(currentPage);
+
+
+
+
+
+
         // ── 观察食品列表，数据变化自动更新 UI ──────────────
         viewModel.foodList.observe(getViewLifecycleOwner(), foods -> {
-            adapter.submitList(foods);
+            if(foods != null)
+            {
+                adapter.submitList(foods);
+                System.out.println("食品列表已更新，当前共 " + foods.size() + " 条数据");
+            }
         });
 
 
@@ -398,4 +441,9 @@ public class FoodListFragment extends Fragment {
             });
         }
     }*/
+
+
+
+
+
 }

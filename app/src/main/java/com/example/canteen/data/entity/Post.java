@@ -37,8 +37,6 @@ public class Post {
     private int commentCount;
 
     // ── 构造函数 ──────────────────────────────────────────
-
-
     public Post(String authorName, String title, String content) {
         this.authorName       = authorName;
         this.title        = title;

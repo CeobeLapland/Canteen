@@ -3,11 +3,13 @@ package com.example.canteen.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.canteen.data.dao.FoodDao;
 import com.example.canteen.data.database.AppDatabase;
 import com.example.canteen.data.entity.Food;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,7 +62,27 @@ public class FoodRepository {
     //region 操纵本地数据库（Room）
     // ── 读取（主线程安全，Room 自动切线程） ──────────────
     public LiveData<List<Food>> getAllFoods() {
-        return foodDao.getAllFoods();
+            return foodDao.getAllFoods();
+        /*//return foodDao.getAllFoods();
+        System.out.println("FoodRepository getAllFoods called");
+        //List<Food> foods = foodDao.getAllFoods().getValue();
+        List<Food> foods = foodDao.getAllFoods().observe(, foodsList -> {
+            if (foodsList != null) {
+                for (Food food : foodsList) {
+                    System.out.println("FoodRepository observed Food: " + food.getName());
+                }
+            } else {
+                System.out.println("FoodRepository observed no foods in database.");
+            }
+        }).getValue();
+        //if(foods == null) {
+        //    System.out.println("FoodRepository getAllFoods: No foods found in database.");
+            //foods = new ArrayList<>(); // 避免空指针，返回空列表
+        //}
+        for (Food food : foods) {
+            System.out.println("FoodRepository getAllFoods: " + food.getName());
+        }
+        return new MutableLiveData<>(foods);*/
     }
 
     public LiveData<Food> getFoodById(int id) {
@@ -71,32 +93,38 @@ public class FoodRepository {
         return foodDao.getFoodsByCampus(campus);
     }
 
-    public LiveData<List<Food>> getFoodsByCanteen(String campus, String canteen) {
-        return foodDao.getFoodsByCanteen(campus, canteen);
-    }
+    //public LiveData<List<Food>> getFoodsByCanteen(String campus, String canteen) {
+    //    return foodDao.getFoodsByCanteen(campus, canteen);
+    //}
 
     /** 按 tag 搜索，自动拼接通配符 */
-    public LiveData<List<Food>> getFoodsByTag(String tag) {
-        return foodDao.getFoodsByTag("%" + tag + "%");
-    }
+    //public LiveData<List<Food>> getFoodsByTag(String tag) {
+        //return foodDao.getFoodsByTag("%" + tag + "%");
+    //}
 
     /** 关键词搜索（名称/描述/标签） */
     public LiveData<List<Food>> searchFoods(String keyword) {
-        return foodDao.searchFoods("%" + keyword + "%");
+        //return foodDao.searchFoods("%" + keyword + "%");
+        return foodDao.getAllFoods();
     }
 
-    public LiveData<List<String>> getAllCampuses() {
-        return foodDao.getAllCampuses();
-    }
+    //public LiveData<List<String>> getAllCampuses() {
+    //    return foodDao.getAllCampuses();
+    //}
 
-    public LiveData<List<String>> getCanteensByCampus(String campus) {
-        return foodDao.getCanteensByCampus(campus);
-    }
+    //public LiveData<List<String>> getCanteensByCampus(String campus) {
+        //return foodDao.getCanteensByCampus(campus);
+    //}
 
     // ── 写入（必须在后台线程执行） ────────────────────────
     public void insert(Food food) {
         AppDatabase.DB_EXECUTOR.execute(() ->
                 foodDao.insert(food));
+    }
+
+    public void insert(List<Food> foods) {
+        AppDatabase.DB_EXECUTOR.execute(() ->
+                foodDao.insert(foods));
     }
 
     public void update(Food food) {
@@ -111,9 +139,57 @@ public class FoodRepository {
 
     /** 给食品添加一条评分 */
     public void addRating(int foodId, float rating) {
-        AppDatabase.DB_EXECUTOR.execute(() ->
-                foodDao.addRating(foodId, rating));
+        //AppDatabase.DB_EXECUTOR.execute(() ->
+                //foodDao.addRating(foodId, rating));
     }
+
+
+    private final int PAGE_SIZE = 20; // 每页20条
+    /**
+     * 加载分页数据
+     * 【替换成你自己的接口/数据库查询】
+     */
+    public MutableLiveData<List<Food>> loadFoodData(int page) {
+        // ============== 这里替换成你的真实数据请求 ==============
+        // 模拟网络请求（子线程）
+        /*new Thread(() -> {
+            // 模拟生成分页数据
+            List<Food> data = new ArrayList<>();
+            int start = (page - 1) * PAGE_SIZE;
+            int end = start + PAGE_SIZE;
+            for (int i = start; i < end; i++) {
+                if (i > 200) break; // 模拟总共200条数据
+                Food food = new Food();
+                food.setId(i);
+                food.setName("食品" + i);
+                food.setFullLocation("位置" + i);
+                food.setPrice(99.0f);
+                food.setTags(List.of("标签1", "标签2"));
+                food.setAverageRating(4.5f);
+                food.setRatingCount(100);
+                data.add(food);
+            }
+
+            // 切回主线程更新列表
+            runOnUiThread(() -> {
+                if (page == 1) {
+                    adapter.setNewList(data); // 第一页：初始化
+                } else {
+                    adapter.addMoreList(data); // 下一页：追加
+                }
+            });
+        }).start();*/
+        return new MutableLiveData<>(); // 占位，实际应返回分页数据
+    }
+
+    public List<Food> loadPage(int page) {
+        //return new ArrayList<>(); // 占位，实际应返回分页数据
+        return foodDao.getAllFoods().getValue(); // 注意：这里直接返回全部数据，实际应实现分页查询
+    }
+
+
+
+
     //endregion
 
 

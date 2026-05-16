@@ -76,7 +76,7 @@ public class PostViewModel extends AndroidViewModel {
 
     /** 帖子点赞 */
     public void likePost(int postId) {
-        repository.likePost(postId);
+        //repository.likePost(postId);
     }
 
     /** 发表评论 */

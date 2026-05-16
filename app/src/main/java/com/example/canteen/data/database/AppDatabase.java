@@ -13,7 +13,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.canteen.data.dao.CommentDao;
 import com.example.canteen.data.dao.FoodDao;
-import com.example.canteen.data.dao.FoodPostCrossRefDao;
 import com.example.canteen.data.dao.PostDao;
 import com.example.canteen.data.entity.Comment;
 import com.example.canteen.data.entity.Food;
@@ -45,7 +44,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PostDao    postDao();
     public abstract CommentDao commentDao();
 
-    public abstract FoodPostCrossRefDao foodPostCrossRefDao();
+    //public abstract FoodPostCrossRefDao foodPostCrossRefDao();
 
     // ── 单例 ──────────────────────────────────────────────
     private static volatile AppDatabase INSTANCE;
@@ -95,7 +94,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     PostDao postDao = INSTANCE.postDao();
 
                     List<Food> sampleFoods = buildSampleFoods();
-                    foodDao.insertAll(sampleFoods);
+                    foodDao.insert(sampleFoods);
 
                     // 给第一条食品添加一条示例帖子
                     // 注意：这里直接使用 postDao 插入帖子，并没有关联食品。实际使用中请先插入帖子，再插入关联表 FoodPostCrossRef 来建立关系。

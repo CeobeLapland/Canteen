@@ -9,75 +9,59 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.example.canteen.data.entity.Post;
-import com.example.canteen.data.entity.PostWithComments;
-import com.example.canteen.data.entity.PostWithFoods;
-
 import java.util.List;
+import com.example.canteen.data.entity.Post;
+import com.example.canteen.data.entity.PostWithFoods;
+import com.example.canteen.data.entity.PostWithComments;
+import com.example.canteen.data.entity.FoodPostCrossRef;
 
 /**帖子数据访问对象（DAO）*/
 @Dao
 public interface PostDao {
+	// ---- 基本增删改查 ----
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	long insert(Post post);
 
-    // ── 插入 ──────────────────────────────────────────────
-    /** 插入帖子并返回自增主键 id */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(Post post);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	List<Long> insert(List<Post> posts);
 
-    // ── 更新 ──────────────────────────────────────────────
-    @Update
-    void update(Post post);
+	@Update
+	void update(Post post);
 
-    // ── 删除 ──────────────────────────────────────────────
-    @Delete
-    void delete(Post post);
+	@Delete
+	void delete(Post post);
 
-    @Query("DELETE FROM posts WHERE id = :postId")
-    void deleteById(int postId);
+	@Query("SELECT * FROM posts ORDER BY created_at DESC")
+	LiveData<List<Post>> getAllPosts();
 
+	@Query("SELECT * FROM posts WHERE id = :id LIMIT 1")
+	LiveData<Post> getPostById(int id);
 
-    // ── 查询：全量 ────────────────────────────────────────
-    /** 获取全部帖子，按发布时间倒序（最新在前） */
-    @Query("SELECT * FROM posts ORDER BY created_at DESC")
-    LiveData<List<Post>> getAllPosts();
+	@Query("SELECT * FROM posts WHERE author_name = :author ORDER BY created_at DESC")
+	LiveData<List<Post>> getPostsByAuthor(String author);
 
+	// ---- 关联查询（Post <-> Food 多对多） ----
+	@Transaction
+	@Query("SELECT * FROM posts WHERE id = :postId")
+	LiveData<PostWithFoods> getPostWithFoods(int postId);
 
-    /** 获取热门帖子，按点赞数倒序（最多点赞在前） */
-    @Query(" SELECT * FROM posts ORDER BY like_count DESC")
-    LiveData<List<Post>> getHotPosts();
+	@Transaction
+	@Query("SELECT * FROM posts ORDER BY created_at DESC")
+	LiveData<List<PostWithFoods>> getAllPostsWithFoods();
 
-    /** 查询某作者的全部帖子，按发布时间倒序 */
-    @Query("SELECT * FROM posts WHERE author_name = :authorName ORDER BY created_at DESC")
-    LiveData<List<Post>> getPostsByAuthor(String authorName);
+	// ---- 关联查询（Post -> Comment 一对多） ----
+	@Transaction
+	@Query("SELECT * FROM posts WHERE id = :postId")
+	LiveData<PostWithComments> getPostWithComments(int postId);
 
-    /* ---------- 多对多：Post ↔ Food ---------- */
-    @Transaction
-    @Query("SELECT * FROM posts WHERE id = :postId")
-    PostWithFoods getPostWithFoods(int postId);
+	@Transaction
+	@Query("SELECT * FROM posts ORDER BY created_at DESC")
+	LiveData<List<PostWithComments>> getAllPostsWithComments();
 
+	// ---- 中间表操作 ----
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	void insertFoodPostCrossRef(FoodPostCrossRef crossRef);
 
-    /* ---------- 一对多：Post ↔ Comment ---------- */
-    @Transaction
-    @Query("SELECT * FROM posts WHERE id = :postId")
-    PostWithComments getPostWithComments(int postId);
-    // ── 查询：单条 ────────────────────────────────────────
-    @Query("SELECT * FROM posts WHERE id = :postId LIMIT 1")
-    LiveData<Post> getPostById(int postId);
-
-    //查询某食品下的所有帖子(这个写在了FoodDao里)
-    //@Query("SELECT p.* FROM posts p JOIN post_food_cross_ref pf ON p.id = pf.post_id WHERE pf.food_id = :foodId ORDER BY p.created_at DESC")
-    //LiveData<List<Post>> getPostsByFoodId(int foodId);
-
-    // ── 点赞（原子 +1） ───────────────────────────────────
-    @Query("UPDATE posts SET like_count = like_count + 1 WHERE id = :postId")
-    void likePost(int postId);
-
-    // ── 更新评论数（新增评论后调用） ─────────────────────
-    @Query("UPDATE posts SET comment_count = comment_count + 1 WHERE id = :postId")
-    void incrementCommentCount(int postId);
-
-    /** 评论被删除后调用，评论数 -1（不低于 0） */
-    @Query("UPDATE posts SET comment_count = MAX(0, comment_count - 1) WHERE id = :postId")
-    void decrementCommentCount(int postId);
-
+	@Delete
+	void deleteFoodPostCrossRef(FoodPostCrossRef crossRef);
 }

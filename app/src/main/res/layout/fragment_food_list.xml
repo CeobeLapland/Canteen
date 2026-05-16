@@ -164,23 +164,22 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!-- 这里放你的列表，我用 RecyclerView 举例 -->
         <!-- 食品列表 -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_food"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:clipToPadding="false"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"/>
-
+            android:scrollbars="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

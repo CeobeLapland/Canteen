@@ -28,7 +28,7 @@ public class FoodViewModel extends AndroidViewModel
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>("");
 
     /** 当前选中校区，null 表示全部 */
-    private final MutableLiveData<String> selectedCampus = new MutableLiveData<>(null);
+    //private final MutableLiveData<String> selectedCampus = new MutableLiveData<>(null);
 
     // ── 对外暴露的 LiveData ───────────────────────────────
     /**
@@ -38,25 +38,24 @@ public class FoodViewModel extends AndroidViewModel
      * switchMap 会在 searchQuery 变化时自动切换底层 LiveData，
      * Activity/Fragment 只需 observe foodList，无需感知切换逻辑。
      */
-    public final LiveData<List<Food>> foodList;
+    public LiveData<List<Food>> foodList;
+    //public MutableLiveData<List<Food>> foodList;// = new MutableLiveData<>();
 
     /** 所有可选校区列表 */
-    public final LiveData<List<String>> campusList;
+    //public final LiveData<List<String>> campusList;
 
     public FoodViewModel(@NonNull Application application)
     {
         super(application);
         repository = new FoodRepository(application);
-        campusList = repository.getAllCampuses();
+        //campusList = repository.getAllCampuses();
 
-        foodList = Transformations.switchMap(searchQuery, query -> {
+        //foodList = repository.loadFoodData(1);
 
-            if (query == null || query.trim().isEmpty()) {
-                return repository.getAllFoods();
-            } else {
-                return repository.searchFoods(query.trim());
-            }
-        });
+            //foodList = (MutableLiveData<List<Food>>) Transformations.switchMap(searchQuery, query -> {
+            //   return new MutableLiveData<>(repository.searchFoods(query).getValue());
+            //});
+        foodList= repository.getAllFoods();
     }
 
     // ── UI 调用的操作方法 ─────────────────────────────────
@@ -64,13 +63,21 @@ public class FoodViewModel extends AndroidViewModel
     /** 更新搜索关键词（由搜索框文字变化触发） */
     public void setSearchQuery(String query) {
         searchQuery.setValue(query);
+        foodList = repository.getAllFoods();
+        //repository.getAllFoods().observe(this, foods -> foodList.setValue(foods));
+        //searchQuery.setValue(query);
+        /*if (query == null || query.trim().isEmpty()) {
+            foodList = repository.getAllFoods();
+        } else {
+            //foodList = repository.searchFoods(query.trim());
+        }*/
     }
 
-    /** 按校区筛选（暂时直接更新 searchQuery 逻辑可扩展） */
-    public void filterByCampus(String campus) {
-        selectedCampus.setValue(campus);
+    ///** 按校区筛选（暂时直接更新 searchQuery 逻辑可扩展） */
+    //public void filterByCampus(String campus) {
+        //selectedCampus.setValue(campus);
         // TODO: 扩展 switchMap 联动多个过滤条件
-    }
+    //}
 
     /** 用户给某食品评分 */
     public void rateFood(int foodId, float rating) {
@@ -85,5 +92,13 @@ public class FoodViewModel extends AndroidViewModel
     /** 获取单条食品详情（用于详情页） */
     public LiveData<Food> getFoodById(int foodId) {
         return repository.getFoodById(foodId);
+    }
+
+    public void addPage(int page){
+        //foodList.setValue(foodList.getValue().addAll(repository.loadPage(page)));
+        List<Food> list = foodList.getValue();
+        list.addAll(repository.loadPage(page));
+        //foodList.setValue(list);
+        foodList = new MutableLiveData<>(list);
     }
 }

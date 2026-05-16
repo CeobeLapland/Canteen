@@ -66,14 +66,14 @@ public class PostRepository {
         AppDatabase.DB_EXECUTOR.execute(() -> postDao.delete(post));
     }
 
-    public void deletePostById(int postId) {
-        AppDatabase.DB_EXECUTOR.execute(() -> postDao.deleteById(postId));
-    }
+    //public void deletePostById(int postId) {
+    //    AppDatabase.DB_EXECUTOR.execute(() -> postDao.deleteById(postId));
+    //}
 
-    /** 帖子点赞（+1） */
-    public void likePost(int postId) {
-        AppDatabase.DB_EXECUTOR.execute(() -> postDao.likePost(postId));
-    }
+    ///** 帖子点赞（+1） */
+    //public void likePost(int postId) {
+    //    AppDatabase.DB_EXECUTOR.execute(() -> postDao.likePost(postId));
+    //}
 
     // ── 评论：读取 ────────────────────────────────────────
     public LiveData<List<Comment>> getCommentsByPost(int postId) {
@@ -84,14 +84,14 @@ public class PostRepository {
     public void insertComment(Comment comment) {
         AppDatabase.DB_EXECUTOR.execute(() -> {
             commentDao.insert(comment);
-            postDao.incrementCommentCount(comment.getPostId());
+            //postDao.incrementCommentCount(comment.getPostId());
         });
     }
 
     public void deleteComment(Comment comment) {
         AppDatabase.DB_EXECUTOR.execute(() -> {
             commentDao.delete(comment);
-            postDao.decrementCommentCount(comment.getPostId());
+            //postDao.decrementCommentCount(comment.getPostId());
         });
     }
 }
