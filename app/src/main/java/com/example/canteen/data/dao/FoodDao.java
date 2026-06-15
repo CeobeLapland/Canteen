@@ -1,5 +1,8 @@
 package com.example.canteen.data.dao;
 
+import android.database.Observable;
+
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
@@ -7,15 +10,19 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RawQuery;
 import androidx.room.Update;
 
 import java.util.List;
 
 import androidx.room.Transaction;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.example.canteen.data.entity.Food;
 import com.example.canteen.data.entity.FoodPostCrossRef;
 import com.example.canteen.data.entity.FoodWithPosts;
+
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * 食品数据访问对象（DAO）
@@ -37,29 +44,46 @@ public interface FoodDao {
     @Delete
     void delete(Food food);
 
+
     @Query("SELECT * FROM foods ORDER BY name ASC")
-    LiveData<List<Food>> getAllFoods();
+    Single<List<Food>> getAllFoods();
 
     @Query("SELECT * FROM foods WHERE id = :id LIMIT 1")
-    LiveData<Food> getFoodById(int id);
+    Single<Food> getFoodById(int id);
 
-    @Query("SELECT * FROM foods WHERE campus = :campus ORDER BY name ASC")
-    LiveData<List<Food>> getFoodsByCampus(String campus);
+    @Query("SELECT * FROM foods ORDER BY name ASC LIMIT :pageSize OFFSET :pageNumber *:pageSize")
+    Single<List<Food>> getFoodsByPage(int pageSize, int pageNumber);
 
-    @Query("SELECT * FROM foods WHERE canteen = :canteen ORDER BY name ASC")
-    LiveData<List<Food>> getFoodsByCanteen(String canteen);
 
-    @Query("SELECT * FROM foods WHERE tags LIKE '%' || :tag || '%' ORDER BY name ASC")
-    LiveData<List<Food>> getFoodsByTag(String tag);
+
+    @Query("SELECT * FROM foods " +
+           "WHERE (:campus IS NULL OR campus = :campus) " +
+             "AND (:canteen IS NULL OR canteen = :canteen) " +
+             "AND (:floor IS NULL OR floor = :floor) " +
+             "AND (:window IS NULL OR window = :window) " +
+             "AND (:nameKeyword IS NULL OR name LIKE '%' || :nameKeyword || '%') " +
+           "ORDER BY name ASC " +
+           "LIMIT :pageSize OFFSET :pageNumber *:pageSize")
+    Single<List<Food>> getFoodsByDetailsPaged(
+            @Nullable String campus, @Nullable String canteen,
+            @Nullable String floor,@Nullable String window,
+            @Nullable String nameKeyword,
+            int pageSize, int pageNumber
+    );
+
+
+    @RawQuery(observedEntities = Food.class)
+    Single<List<Food>> getFoodsByCustomQuery(SupportSQLiteQuery query);
+
 
     // ---- 关联查询（Food <-> Post 多对多） ----
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")
-    LiveData<FoodWithPosts> getFoodWithPosts(int foodId);
+    Single<FoodWithPosts> getFoodWithPosts(int foodId);
 
     @Transaction
     @Query("SELECT * FROM foods ORDER BY name ASC")
-    LiveData<List<FoodWithPosts>> getAllFoodsWithPosts();
+    Single<List<FoodWithPosts>> getAllFoodsWithPosts();
 
     // 操作中间表
     @Insert(onConflict = OnConflictStrategy.IGNORE)

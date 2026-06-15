@@ -52,9 +52,9 @@ public class PostRepository {
             return foodWithPosts.posts;
         });
     }*/
-    public LiveData<FoodWithPosts> getPostsByFood(int foodId) {
-        return foodDao.getFoodWithPosts(foodId);
-    }
+    //public LiveData<FoodWithPosts> getPostsByFood(int foodId) {
+    //    return foodDao.getFoodWithPosts(foodId);
+    //}
 
     // ── 帖子：写入 ────────────────────────────────────────
     public void insertPost(Post post) {

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.canteen.R;
-import com.example.canteen.viewmodel.PostViewModel;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -25,7 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
  */
 public class PostListFragment extends Fragment {
 
-    private PostViewModel viewModel;
+    //private PostViewModel viewModel;
     private PostAdapter   adapter;
 
     @Nullable
@@ -40,7 +40,7 @@ public class PostListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
+        //viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
 
         // ── RecyclerView ──────────────────────────────────
         RecyclerView recyclerView = view.findViewById(R.id.recycler_posts);
@@ -49,7 +49,7 @@ public class PostListFragment extends Fragment {
         adapter = new PostAdapter(
             post -> {
                 // 点击 → 打开帖子详情
-                viewModel.selectPost(post.getId());
+                //viewModel.selectPost(post.getId());
                 requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new PostDetailFragment())
@@ -61,7 +61,7 @@ public class PostListFragment extends Fragment {
                 new AlertDialog.Builder(requireContext())
                     .setTitle("删除帖子")
                     .setMessage("确定要删除这条帖子吗？")
-                    .setPositiveButton("删除", (d, w) -> viewModel.deletePost(post))
+                    //.setPositiveButton("删除", (d, w) -> viewModel.deletePost(post))
                     .setNegativeButton("取消", null)
                     .show();
             }
@@ -69,9 +69,9 @@ public class PostListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // ── 观察帖子列表 ──────────────────────────────────
-        viewModel.allPosts.observe(getViewLifecycleOwner(), posts -> {
-            adapter.submitList(posts);
-        });
+        //viewModel.allPosts.observe(getViewLifecycleOwner(), posts -> {
+        //    adapter.submitList(posts);
+        //});
 
         // ── FAB：发布帖子 ─────────────────────────────────
         FloatingActionButton fab = view.findViewById(R.id.fab_new_post);
@@ -100,7 +100,7 @@ public class PostListFragment extends Fragment {
 
                 if (title.isEmpty() || content.isEmpty()) return;
                 // foodId 传 null 表示非特定食品的帖子
-                viewModel.publishPost(author.isEmpty() ? "匿名" : author, title, content);
+                //viewModel.publishPost(author.isEmpty() ? "匿名" : author, title, content);
             })
             .setNegativeButton("取消", null)
             .show();

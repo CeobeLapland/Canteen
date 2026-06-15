@@ -83,6 +83,14 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
 
+    // Room 适配 RxJava3
+    implementation("androidx.room:room-rxjava3:2.6.1")
+    // RxJava 核心
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    // Android 主线程调度器（必须！否则没有 observeOn 主线程）
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Gson 解析
@@ -92,4 +100,10 @@ dependencies {
 
     // 新增：日志拦截器（必须加！）
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+
+
+
+    // AI功能模块
+    //implementation project(":mylibrary")
 }

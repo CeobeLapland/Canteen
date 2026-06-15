@@ -106,19 +106,4 @@ public class FoodAdapter extends ListAdapter<Food, FoodAdapter.FoodViewHolder>
         }
     }
 
-    // 分页新增：是否正在加载（防止重复请求）
-    public boolean isLoading = false;
-    // 分页新增：是否还有更多数据
-    public boolean hasMore = true;
-
-    // ====================== 分页新增：初始化第一页数据 ======================
-    public void setNewList(List<Food> newData) {
-        hasMore = newData.size() >= 20; // 每页20条，不满则无更多数据
-    }
-
-    // ====================== 分页新增：追加下一页数据 ======================
-    public void addMoreList(List<Food> moreData) {
-        isLoading = false;
-        hasMore = moreData.size() >= 20;
-    }
 }

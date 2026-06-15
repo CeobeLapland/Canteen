@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.canteen.R;
 import com.example.canteen.data.entity.Campus;
@@ -23,7 +24,7 @@ import com.example.canteen.data.entity.Canteen;
 import com.example.canteen.data.entity.Floor;
 
 import com.example.canteen.data.entity.Food;
-import com.example.canteen.viewmodel.FoodViewModel;
+import com.example.canteen.data.repository.FoodRepository;
 
 
 import android.widget.AdapterView;
@@ -52,7 +53,6 @@ import java.util.Map;
  */
 public class FoodListFragment extends Fragment {
 
-    private FoodViewModel viewModel;
     private FoodAdapter adapter;
 
     @Nullable
@@ -63,34 +63,26 @@ public class FoodListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         System.out.println("FoodListFragment onCreateView");
 
+        if(savedInstanceState!=null) {
+            System.out.println("FoodListFragment received savedInstanceState: " + savedInstanceState);
+        }
+        else {
+            if(FoodRepository.instance == null)
+                repository = new FoodRepository(requireActivity().getApplication());
+        }
+
         return inflater.inflate(R.layout.fragment_food_list, container, false);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        System.out.println("FoodListFragment onDestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        System.out.println("FoodListFragment onDestroyView");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        System.out.println("FoodListFragment onPause");
     }
 
     // 控件声明
     private EditText etSearch;
     private Button btnSearch;
-    //private TextView tvPreview;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     // 筛选数据
     public Searcher searcher = new Searcher();
+    private FoodRepository repository;
 
     // 记录选中的值
     //private String selectedCampus = "全部校区";
@@ -109,9 +101,6 @@ public class FoodListFragment extends Fragment {
     private Map<String, Button> campusTagButtonsMap = new HashMap<>(),
             canteenTagButtonsMap = new HashMap<>(),
             floorTagButtonsMap = new HashMap<>();
-
-    // 筛选标签文字（你可以随便改）
-    //private final List<String> tagList = new ArrayList<>(Arrays.asList("全部", "热门", "最新上线", "价格低", "评分高", "距离近", "优惠多", "新品", "推荐"));
 
 
     /**
@@ -139,17 +128,6 @@ public class FoodListFragment extends Fragment {
             params.setMargins(0, 0, 0, 5); // 间距
             tagBtn.setLayoutParams(params);
 
-            /*
-            //tagBtn.setPadding(20, 10, 20, 10);
-            //tagBtn.setBackgroundResource(R.drawable.tag_bg); // 圆角样式
-            //tagBtn.setTextColor(ContextCompat.getColor(this, R.color.tag_text));
-
-            // 标签点击事件
-            tagBtn.setOnClickListener(v -> {
-                System.out.println("点击了标签: " + text);
-                // 这里可以写你的筛选逻辑
-            });*/
-
             // 添加到布局
             layoutTags.addView(tagBtn);
         }
@@ -159,17 +137,53 @@ public class FoodListFragment extends Fragment {
 
 
 
-    private RecyclerView recyclerView;
     // 分页参数
     private int currentPage = 1;    // 当前页码
+
+    // 分页新增：是否正在加载（防止重复请求）
+    public boolean isLoading = false;
+    // 分页新增：是否还有更多数据
+    public boolean hasMore = true;
+
+    // ====================== 分页新增：追加下一页数据 ======================
+    private void addNextPage(int page)
+    {
+        repository.loadPage(page)
+                .subscribe(foods -> {
+                    System.out.println("加载到第 " + page + " 页，" + foods.size() + " 条数据");
+                    if (foods.isEmpty()) {
+                        hasMore = false; // 没有更多数据了
+                    } else {
+                        List<Food> currentList = adapter.getCurrentList();
+                        List<Food> newList = new ArrayList<>(currentList);
+                        newList.addAll(foods);
+                        adapter.submitList(newList); // 提交新列表，触发 DiffUtil 计算差异并刷新 RecyclerView
+                    }
+                    isLoading = false; // 加载完成
+                }, throwable -> {
+                    System.err.println("加载第 " + page + " 页失败: " + throwable.getMessage());
+                    isLoading = false; // 加载完成（即使失败也要重置状态）
+                });
+    }
+
+    // 仅加载本页数据（不追加），适用于刷新或搜索等场景
+    private void loadPageOnly(int page)
+    {
+        repository.loadPage(page)
+                .subscribe(foods -> {
+                    System.out.println("加载了第 " + page + " 页，" + foods.size() + " 条数据");
+                    adapter.submitList(foods); // 直接提交本页数据，替换当前列表
+                    isLoading = false; // 加载完成
+                }, throwable -> {
+                    System.err.println("加载第 " + page + " 页失败: " + throwable.getMessage());
+                    isLoading = false; // 加载完成（即使失败也要重置状态）
+                });
+    }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // ── ViewModel 初始化（由 Activity 作用域管理，Fragment 共享） ──
-        viewModel = new ViewModelProvider(requireActivity()).get(FoodViewModel.class);
 
         // ── RecyclerView 设置 ──────────────────────────────
         recyclerView = view.findViewById(R.id.recycler_food);
@@ -198,28 +212,11 @@ public class FoodListFragment extends Fragment {
                 int totalCount = manager.getItemCount();
 
                 // 判断：未加载 + 有更多数据 + 滑到底部附近
-                if (!adapter.isLoading && adapter.hasMore && lastVisible >= totalCount - 2) {
-                    adapter.isLoading = true; // 标记加载中
+                if (!isLoading && hasMore && lastVisible >= totalCount - 2) {
+                    isLoading = true; // 标记加载中
                     currentPage++; // 页码+1
-                    //loadFoodData(currentPage); // 请求下一页
-                    viewModel.addPage(currentPage);
+                    addNextPage(currentPage); // 请求下一页
                 }
-            }
-        });
-        // 首次加载第一页
-        //loadFoodData(currentPage);
-
-
-
-
-
-
-        // ── 观察食品列表，数据变化自动更新 UI ──────────────
-        viewModel.foodList.observe(getViewLifecycleOwner(), foods -> {
-            if(foods != null)
-            {
-                adapter.submitList(foods);
-                System.out.println("食品列表已更新，当前共 " + foods.size() + " 条数据");
             }
         });
 
@@ -234,7 +231,7 @@ public class FoodListFragment extends Fragment {
             String searchContent = etSearch.getText().toString().trim();
 
             System.out.println("点击了搜索按钮，搜索内容: " + searchContent);
-            viewModel.setSearchQuery(searchContent); // 更新搜索关键词，触发数据刷新
+            //viewModel.setSearchQuery(searchContent); // 更新搜索关键词，触发数据刷新
         });
 
         initSearcherData(); // 初始化树形查询数据
@@ -255,30 +252,6 @@ public class FoodListFragment extends Fragment {
         //scrollView.setVisibility(View.GONE);
 
         // 展开/收起 点击事件
-        /*btnToggleCampus.setOnClickListener(v -> {
-            isExpandedCampus = !isExpandedCampus;
-            if (isExpandedCampus) {
-                scrollViewCampus.setVisibility(View.VISIBLE);
-            } else {
-                scrollViewCampus.setVisibility(View.GONE);
-            }
-        });
-        btnToggleCanteen.setOnClickListener(v -> {
-            isExpandedCanteen = !isExpandedCanteen;
-            if (isExpandedCanteen) {
-                scrollViewCanteen.setVisibility(View.VISIBLE);
-            } else {
-                scrollViewCanteen.setVisibility(View.GONE);
-            }
-        });
-        btnToggleFloor.setOnClickListener(v -> {
-            isExpandedFloor = !isExpandedFloor;
-            if (isExpandedFloor) {
-                scrollViewFloor.setVisibility(View.VISIBLE);
-            } else {
-                scrollViewFloor.setVisibility(View.GONE);
-            }
-        });*/
         btnToggleCampus.setOnClickListener(v -> {
             isExpanded = !isExpanded;
             if (isExpanded) {
@@ -305,8 +278,30 @@ public class FoodListFragment extends Fragment {
         scrollViewFloor.setVisibility(View.GONE);
         //endregion
 
-
         bindAllTagButtons();
+
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        // 2. 设置下拉刷新监听（核心）
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // 下拉触发时执行刷新逻辑
+                refreshData();
+            }
+        });
+
+        // 可选：设置刷新图标颜色（一行代码搞定）
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light
+        );
+
+        // 模拟首次进入自动刷新（直接显示刷新图标 + 执行刷新逻辑）
+        //swipeRefreshLayout.setRefreshing(true);
+        //refreshData();
+        getAllFood();
     }
 
     private void initSearcherData() {
@@ -421,29 +416,28 @@ public class FoodListFragment extends Fragment {
         }
     }
 
-    /*private void bindAllTagButtons(Button[] allTagButtons, List<String> tagList, String type)
+
+
+
+    private void getAllFood()
     {
-        for (int i = 0; i < allTagButtons.length; i++) {
-            Button tagBtn = allTagButtons[i];
-            String text = tagList.get(i);
-            tagBtn.setOnClickListener(v -> {
-                System.out.println("点击了标签: " + text);
-                // 这里可以写你的筛选逻辑
-                Toast.makeText(this.getContext(), "点击了标签: " + text, Toast.LENGTH_SHORT).show();
-                // 根据 type 判断是校区、食堂还是楼层，更新 searcher 的选中值
-                if (type.equals("campus")) {
-                    searcher.setSelectedCampus(text);
-                } else if (type.equals("canteen")) {
-                    searcher.setSelectedCanteen(text);
-                } else if (type.equals("floor")) {
-                    searcher.setSelectedFloor(text);
-                }
-            });
-        }
-    }*/
+        repository.getAllFoods()
+                .subscribe(foods -> {
+                    System.out.println("查询到 " + foods.size() + " 个食品");
+                    for (Food food : foods) {
+                        System.out.println("Food: " + food.getName() + ", Location: " + food.getFullLocation());
+                    }
+                    adapter.submitList(foods);
+                }, throwable -> {
+                    System.err.println("查询食品失败: " + throwable.getMessage());
+                });
+    }
 
-
-
-
-
+    // 模拟刷新数据（你可以在这里请求接口、加载数据库等）
+    private void refreshData() {
+        currentPage = 1; // 刷新时重置页码
+        //hasMore = true; // 重置是否有更多数据的标志
+        loadPageOnly(currentPage); // 仅加载第一页数据，替换当前列表
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

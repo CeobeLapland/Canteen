@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.canteen.R;
-import com.example.canteen.viewmodel.PostViewModel;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 /**
@@ -27,7 +27,7 @@ import com.google.android.material.textfield.TextInputEditText;
  */
 public class PostDetailFragment extends Fragment {
 
-    private PostViewModel viewModel;
+    //private PostViewModel viewModel;
 
     @Nullable
     @Override
@@ -42,7 +42,7 @@ public class PostDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // 与 Activity 共享同一个 ViewModel（保证 currentPostId 状态一致）
-        viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
+        //viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
 
         // ── Views ──────────────────────────────────────────
         TextView tvTitle     = view.findViewById(R.id.tv_detail_post_title);
@@ -52,7 +52,7 @@ public class PostDetailFragment extends Fragment {
         Button   btnLike     = view.findViewById(R.id.btn_like);
 
         // ── 帖子基本信息 ───────────────────────────────────
-        viewModel.currentPost.observe(getViewLifecycleOwner(), post -> {
+        /*viewModel.currentPost.observe(getViewLifecycleOwner(), post -> {
             if (post == null) return;
             tvTitle.setText(post.getTitle());
             tvAuthor.setText("by " + post.getAuthorName());
@@ -62,7 +62,7 @@ public class PostDetailFragment extends Fragment {
             btnLike.setOnClickListener(v -> {
                 viewModel.likePost(post.getId());
             });
-        });
+        });*/
 
         // ── 评论 RecyclerView ──────────────────────────────
         RecyclerView rvComments = view.findViewById(R.id.rv_comments);
@@ -72,22 +72,22 @@ public class PostDetailFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                 .setTitle("删除评论")
                 .setMessage("确定删除这条评论？")
-                .setPositiveButton("删除", (d, w) -> viewModel.deleteComment(comment))
+                //.setPositiveButton("删除", (d, w) -> viewModel.deleteComment(comment))
                 .setNegativeButton("取消", null)
                 .show();
         });
         rvComments.setAdapter(commentAdapter);
 
-        viewModel.commentsOfCurrentPost.observe(getViewLifecycleOwner(), comments -> {
-            commentAdapter.submitList(comments);
-        });
+        //viewModel.commentsOfCurrentPost.observe(getViewLifecycleOwner(), comments -> {
+        //    commentAdapter.submitList(comments);
+        //});
 
         // ── 发表评论 ──────────────────────────────────────
         TextInputEditText etCommentAuthor  = view.findViewById(R.id.et_comment_author);
         TextInputEditText etCommentContent = view.findViewById(R.id.et_comment_content);
         Button btnSubmitComment            = view.findViewById(R.id.btn_submit_comment);
 
-        btnSubmitComment.setOnClickListener(v -> {
+        /*btnSubmitComment.setOnClickListener(v -> {
             String author  = etCommentAuthor.getText()  != null
                 ? etCommentAuthor.getText().toString().trim()  : "匿名";
             String content = etCommentContent.getText() != null
@@ -101,6 +101,6 @@ public class PostDetailFragment extends Fragment {
                 viewModel.addComment(postId, author.isEmpty() ? "匿名" : author, content);
                 etCommentContent.setText("");   // 清空输入框
             }
-        });
+        });*/
     }
 }
