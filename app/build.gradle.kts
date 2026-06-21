@@ -12,12 +12,17 @@ android {
 
     defaultConfig {
         applicationId = "com.example.canteen"
-        minSdk = 24//26
+        minSdk = 26//26//把这个改成了26
         targetSdk = 36//34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+
+            }
+        }
     }
 
     buildTypes {
@@ -30,17 +35,43 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+
+
+    //implementation(libs.datastore.rxjava2)
+    //implementation(libs.datastore.preferences.rxjava2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // DataStore Preferences RxJava3（Java专用）
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
+    //implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    //implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+
+
+
+    // 仅调试时使用，打包上线不会包含
+    //debugImplementation ("com.amitshekhar.android:debug-db:1.0.6")
+    //debugImplementation("com.amitshekhar.android:debug-db:1.1.0")
+
+    // Lombok（编译时注解处理器）
+    // 版本不匹配，JDK17
+    compileOnly("org.projectlombok:lombok:1.18.32")
+    //annotationProcessor("org.projectlombok:lombok:1.18.28")
+    //implementation("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
+
 
     // AndroidX
     implementation("androidx.core:core-ktx:1.12.0")
@@ -77,7 +108,8 @@ dependencies {
     testImplementation("androidx.room:room-testing:2.6.1")
 
     // SwipeRefreshLayout 自动刷新
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
+
 
 
     implementation("com.google.code.gson:gson:2.10.1")
@@ -104,6 +136,38 @@ dependencies {
 
 
 
+
+    implementation("androidx.navigation:navigation-fragment:2.8.0")
+    implementation("androidx.navigation:navigation-ui:2.8.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+
+    // Navigation Fragment + UI
+    //implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    //implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    //需要import com.google.android.flexbox
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+
+    //需要Spinner组件
+    //implementation("com.google.android.material:material:1.11.0")
+
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+// 必须依赖协程（Java 调用需要）
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+
     // AI功能模块
     //implementation project(":mylibrary")
+
+    //Execution failed for task ':app:processDebugNavigationResources'.
+    //> Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
+    //   > Could not find com.amitshekhar.android:debug-db:1.0.6.
+    //implementation("com.amitshekhar.android:debug-db:1.0.6") {
+    //    // 这里可以添加一些排除规则，避免冲突
+    //    exclude(group = "com.google.code.gson", module = "gson")
+    //}
 }

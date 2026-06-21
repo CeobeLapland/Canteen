@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF7ED"
+    android:fillViewport="true"
+    tools:context="com.example.canteen.controller.ContributeRecipeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="贡献食谱"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#7A3C00"
+            android:layout_marginBottom="14dp" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="食谱名称"
+            android:paddingHorizontal="12dp"
+            android:background="#FFFDF7"
+            android:textColor="#5C3A00"
+            android:textColorHint="#B97A2B" />
+
+        <EditText
+            android:id="@+id/etDesc"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:hint="简介"
+            android:padding="12dp"
+            android:background="#FFFDF7"
+            android:textColor="#5C3A00"
+            android:textColorHint="#B97A2B"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/etIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:hint="食材（英文逗号分隔，如：土豆, 盐, 葱花）"
+            android:padding="12dp"
+            android:background="#FFFDF7"
+            android:textColor="#5C3A00"
+            android:textColorHint="#B97A2B"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/etSteps"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="10dp"
+            android:hint="步骤（每行一步）"
+            android:padding="12dp"
+            android:background="#FFFDF7"
+            android:textColor="#5C3A00"
+            android:textColorHint="#B97A2B"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/etTags"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="10dp"
+            android:hint="标签（英文逗号分隔，如：家常,快手,低脂）"
+            android:padding="12dp"
+            android:background="#FFFDF7"
+            android:textColor="#5C3A00"
+            android:textColorHint="#B97A2B"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:text="确定"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#F28C28" />
+    </LinearLayout>
+</ScrollView>

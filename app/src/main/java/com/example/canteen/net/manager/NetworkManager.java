@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkManager {
 
-    private static final String BASE_URL = "https://your-springboot-server.com/";
+    private static final String BASE_URL = "https://ointment-nerd-cinnamon.ngrok-free.dev/api/";
+    //private static final String BASE_URL = "http://10.194.195.211:8080";
 
     private static volatile NetworkManager instance;
     private final Retrofit retrofit;

@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">校园食堂</string>
-<string name="nav_food">食品查询</string>
-<string name="nav_post">帖子广场</string>
-<string name="search_hint">搜索食品名称、标签…</string>
-<string name="publish_post">发布帖子</string>
-<string name="like">点赞</string>
-<string name="submit_comment">发送</string>
-<string name="anonymous">匿名</string>
-<string name="no_posts">暂无帖子，快来发第一条吧！</string>
-<string name="no_foods">未找到相关食品</string>
-<string name="rating_thanks">感谢您的评分！</string>
-<string name="delete_post_confirm">确定要删除这条帖子吗？</string>
-<string name="delete_comment_confirm">确定删除这条评论？</string>
+    <string name="app_name">校园食堂</string>
+    <string name="nav_food">食品查询</string>
+    <string name="nav_post">帖子广场</string>
+    <string name="search_hint">搜索食品名称、标签…</string>
+    <string name="publish_post">发布帖子</string>
+    <string name="like">点赞</string>
+    <string name="submit_comment">发送</string>
+    <string name="anonymous">匿名</string>
+    <string name="no_posts">暂无帖子，快来发第一条吧！</string>
+    <string name="no_foods">未找到相关食品</string>
+    <string name="rating_thanks">感谢您的评分！</string>
+    <string name="delete_post_confirm">确定要删除这条帖子吗？</string>
+    <string name="delete_comment_confirm">确定删除这条评论？</string>
+
+
+    <string name="tab_food">食物</string>
+    <string name="tab_channel">频道</string>
+    <string name="tab_what_to_eat">吃什么</string>
+    <string name="tab_cooking">做饭</string>
+    <string name="tab_profile">个人</string>
+
+    <string name="food_title">食物</string>
+    <string name="channel_title">频道</string>
+    <string name="what_to_eat_title">吃什么</string>
+    <string name="cooking_title">做饭</string>
+    <string name="profile_title">个人</string>
+
+    <string name="food_hint">这里先放食物分类、推荐和搜索入口。</string>
+    <string name="channel_hint">这里先放频道内容，后面可以接列表和详情页。</string>
+    <string name="what_to_eat_hint">这里先放随机推荐、今日菜单和筛选逻辑。</string>
+    <string name="cooking_hint">这里先放做饭步骤、菜谱和教程页。</string>
+    <string name="profile_hint">这里先放头像、收藏、设置和个人中心。</string>
+
+    <string name="search">搜索</string>
+    <string name="clear">清空</string>
+
+    <string name="tag_section_title">标签筛选</string>
+    <string name="filter_campus">校区</string>
+    <string name="filter_canteen">食堂</string>
+    <string name="filter_floor">楼层</string>
+    <string name="filter_window">窗口</string>
+
+    <string name="back">返回</string>
+    <string name="food_detail_title">食物详情</string>
+    <string name="related_posts_title">与此食物相关的帖子</string>
+    <string name="comments_title">评论区</string>
+    <string name="post_comment_title">发表评论</string>
+    <string name="comment_hint">只输入内容即可</string>
+    <string name="post">发送</string>
 </resources>

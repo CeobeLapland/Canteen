@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 //import java.math.BigDecimal;
 import java.util.Set;
+
+import lombok.Data;
+
 public class Requests {
 
     public class TagRequest implements Serializable {
@@ -136,6 +139,29 @@ public class Requests {
                 throw new IllegalArgumentException("价格必须大于 0");
             }
         }
+    }
+
+
+
+    /** 筛选菜品请求（GET 请求的查询参数） */
+    public static class FilterFoodRequest implements Serializable
+    {
+
+        private String name;    // 按名称模糊匹配
+
+        private String campus;  // 按校区精确匹配
+
+        private String canteen; // 按食堂精确匹配
+
+        private String floor;   // 按楼层精确匹配
+
+        private String window;  // 按窗口精确匹配
+
+        private List<String> tags;     // 按标签模糊匹配（至少包含一个标签）
+
+        private Integer minPrice;   // 价格区间下限
+
+        private Integer maxPrice;   // 价格区间上限
     }
 
 

@@ -3,8 +3,12 @@ package com.example.canteen.net.dto;
 import java.io.Serializable;
 //import java.time.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import lombok.Data;
+
 public class Dtos {
 
     public class UserDto implements Serializable {
@@ -65,7 +69,8 @@ public class Dtos {
     }
 
 
-    public class FoodDetailDto implements Serializable {
+    /*public class FoodDetailDto implements Serializable
+    {
         private static final long serialVersionUID = 1L;
 
         private Long id;
@@ -121,6 +126,28 @@ public class Dtos {
         public String toString() {
             return "FoodDetailDto{id=" + id + ", name='" + name + "'}";
         }
+    }*/
+    @Data
+    public static class FoodDetailDto {
+        private Long id;
+        private String name;
+        private String description;
+        private Integer price;
+
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        // 新增详细信息字段
+        private String campus;
+        private String canteen;
+        private String floor;
+        private String window;
+        private String sellTime;
+        private List<String> tags;
+        private Float averageRating;
+        private Integer ratingCount;
+
+        //private int postCount;
     }
 
 

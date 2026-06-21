@@ -10,10 +10,16 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.example.canteen.data.dao.FoodDao;
 import com.example.canteen.data.database.AppDatabase;
+import com.example.canteen.data.entity.Comment;
 import com.example.canteen.data.entity.Food;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 import com.example.canteen.net.manager.NetworkManager;
@@ -35,6 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 /**
  * 食品 Repository
  * Repository 是 ViewModel 与数据源（Room / Network）之间的中间层：
@@ -44,7 +51,13 @@ import retrofit2.Response;
 public class FoodRepository {
 
     // 改成单例模式吧，避免多次创建数据库实例和 Retrofit 实例
-    public static volatile FoodRepository instance;
+    private static volatile FoodRepository instance;
+
+    public static FoodRepository getInstance() {
+        //if (instance == null)
+        //    instance = new FoodRepository(App.getInstance());
+        return instance;
+    }
 
     private final FoodDao foodDao;
     private final FoodApi api;
@@ -62,7 +75,7 @@ public class FoodRepository {
         foodDao = db.foodDao();
 
         // 测试：打印所有食品名称，验证数据库连接
-        AppDatabase.DB_EXECUTOR.execute(() -> {
+        /*AppDatabase.DB_EXECUTOR.execute(() -> {
             foodDao.getAllFoods()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
@@ -77,7 +90,7 @@ public class FoodRepository {
                     }, throwable -> {
                         System.err.println("Error observing foods in FoodRepository: " + throwable.getMessage());
                     });
-        });
+        });*/
 
         api = NetworkManager.getInstance().create(FoodApi.class);
     }
@@ -89,7 +102,7 @@ public class FoodRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<Food> getFoodById(int id) {
+    public Single<Food> getFoodById(long id) {
         return foodDao.getFoodById(id);
     }
 
@@ -104,6 +117,56 @@ public class FoodRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+
+
+
+    public List<String> getRelatedPosts(long foodId) {
+
+        return Arrays.asList(
+                "示例数据喵，数据库空空如也（）"
+        );
+    }
+
+    public Single<List<Food>> getFoodForTable(List<String> tags){
+        // 总共返回12条
+        // 返回个示例
+        return Single.just(Arrays.asList(
+                new Food(1L, "东校区", "第一食堂", "2楼", "A03", "米饭", "香喷喷的米饭", 2, "10:00-20:00", 4.5f, 100),
+                new Food(2L, "东校区", "第一食堂", "2楼", "A04", "面条", "劲道的面条", 3, "10:00-20:00", 4.0f, 80)
+        )).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread());
+        //return foodDao.getFoodsByTags(tags, 12)
+        //        .subscribeOn(Schedulers.io())
+        //        .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<Integer> getFoodCount() {
+        // 返回4
+        return Single.just(4)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        //return foodDao.getFoodCount()
+        //        .subscribeOn(Schedulers.io())
+        //        .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public List<Comment> getComments(long foodId) {
+        return Arrays.asList(
+                new Comment(1L, foodId, "作者", "没有人评论！")
+        );
+    }
+
+    public void addComment(long foodId, String content) {
+
+    }
+
+
+    public void likeComment(long foodId, long commentId) {
+
+    }
+
+
 
 
     // ── 写入（必须在后台线程执行） ────────────────────────
@@ -136,7 +199,11 @@ public class FoodRepository {
     }
 
 
-
+    public Single<List<Food>> searchFoodsByName(String keyword) {
+        return foodDao.searchFoodsByName(keyword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
     public Single<List<Food>> getFoodsByDetailsPaged(
             @Nullable String campus, @Nullable String canteen,
@@ -155,9 +222,17 @@ public class FoodRepository {
     // Single<List<Food>> getFoodsByCustomQuery(String query, Object[] args);
     public Single<List<Food>> getFoodsByCustomQuery(
             String campus, String canteen, String floor, String window, String nameKeyword,
-            int minPrice, int maxPrice,
+            @Nullable Integer minPrice, @Nullable Integer maxPrice,
+            List<String> tags,
             int pageSize, int pageNumber
     ) {
+        // 先返回几个示例数据，验证接口
+        return Single.just(Arrays.asList(
+                new Food(1L, "东校区", "第一食堂", "2楼", "A03", "米饭", "香喷喷的米饭", 2, "10:00-20:00", 4.5f, 100)
+                ))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+        /*
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM foods WHERE 1=1");
         List<Object> argsList = new ArrayList<>();
 
@@ -174,7 +249,7 @@ public class FoodRepository {
             argsList.add(floor);
         }
         if (window != null) {
-            queryBuilder.append(" AND window = ?");
+            queryBuilder.append(" AND window_sell = ?");
             argsList.add(window);
         }
         if (nameKeyword != null) {
@@ -189,6 +264,12 @@ public class FoodRepository {
             queryBuilder.append(" AND price <= ?");
             argsList.add(maxPrice);
         }
+        if (tags != null && !tags.isEmpty()) {
+            for (String tag : tags) {
+                queryBuilder.append(" AND tags LIKE ?");
+                argsList.add("%" + tag + "%");
+            }
+        }
 
         // 分页
         int offset = (pageNumber - 1) * pageSize;
@@ -201,7 +282,7 @@ public class FoodRepository {
 
         return foodDao.getFoodsByCustomQuery(new SimpleSQLiteQuery(finalQuery, finalArgs))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());*/
     }
 
     //endregion
@@ -280,25 +361,6 @@ public class FoodRepository {
 
     //region 操纵远程服务器（Retrofit）
 
-    /**
-     * 统一的仓库回调封装：把后端的 ApiResponse 映射为 onSuccess/onError/onFailure
-     */
-    public interface RepositoryCallback<T> {
-        /**
-         * Called when request and ApiResponse indicate success.
-         */
-        void onSuccess(T data);
-
-        /**
-         * Called when server returns a business error (ApiResponse.success == false) or HTTP error.
-         */
-        void onError(int code, String message);
-
-        /**
-         * Called when network/serialization failure occurs.
-         */
-        void onFailure(Throwable t);
-    }
 
     /**
      * 内部通用方法：把 Call<ApiResponse<T>> 转换为 RepositoryCallback<T>

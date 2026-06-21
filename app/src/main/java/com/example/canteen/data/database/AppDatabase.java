@@ -14,10 +14,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.canteen.data.dao.CommentDao;
 import com.example.canteen.data.dao.FoodDao;
 import com.example.canteen.data.dao.PostDao;
-import com.example.canteen.data.entity.Comment;
-import com.example.canteen.data.entity.Food;
-import com.example.canteen.data.entity.FoodPostCrossRef;
-import com.example.canteen.data.entity.Post;
+import com.example.canteen.data.dao.SeasoningDao;
+import com.example.canteen.data.dao.TagDao;
+import com.example.canteen.data.dao.TypeDao;
+import com.example.canteen.data.dao.WindowDao;
+import com.example.canteen.data.entity.*;
+import com.example.canteen.data.entity.mid.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +34,14 @@ import java.util.concurrent.Executors;
  * exportSchema = false：不导出 schema JSON（生产项目建议 true 并纳入版本管理）
  */
 @Database(
-    entities  = { Food.class, Post.class, Comment.class, FoodPostCrossRef.class },
-    version   = 2,
+    entities  = {
+        Food.class, Post.class, Comment.class,
+        Tag.class, Type.class, Window.class, Seasoning.class,
+        FoodPostCrossRef.class,
+        FoodTagCrossRef.class,
+        PostTypeCrossRef.class
+    },
+    version   = 1,
     exportSchema = false
 )
 @TypeConverters({Converters.class})  // 这里注册！
@@ -44,7 +52,11 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PostDao    postDao();
     public abstract CommentDao commentDao();
 
-    //public abstract FoodPostCrossRefDao foodPostCrossRefDao();
+    public abstract TagDao tagDao();
+    public abstract TypeDao typeDao();
+    public abstract WindowDao windowDao();
+    public abstract SeasoningDao seasoningDao();
+
 
     // ── 单例 ──────────────────────────────────────────────
     private static volatile AppDatabase INSTANCE;
@@ -93,15 +105,15 @@ public abstract class AppDatabase extends RoomDatabase {
                     FoodDao foodDao = INSTANCE.foodDao();
                     PostDao postDao = INSTANCE.postDao();
 
-                    List<Food> sampleFoods = buildSampleFoods();
-                    foodDao.insert(sampleFoods);
+                    //List<Food> sampleFoods = buildSampleFoods();
+                    //foodDao.insert(sampleFoods);
 
                     // 给第一条食品添加一条示例帖子
                     // 注意：这里直接使用 postDao 插入帖子，并没有关联食品。实际使用中请先插入帖子，再插入关联表 FoodPostCrossRef 来建立关系。
                     //这一条没有插入成功，可能是因为 FoodPostCrossRef 表没有正确关联 Food 和 Post 导致的。建议先插入 Post，再插入 FoodPostCrossRef 来建立关系。
-                    Post p = new Post("小明", "东区一食堂红烧肉太好吃了！",
-                        "今天午饭去一食堂吃了红烧肉套餐，肉烂入味，推荐大家去试试！");
-                    postDao.insert(p);
+                    //Post p = new Post("小明", "东区一食堂红烧肉太好吃了！",
+                    //    "今天午饭去一食堂吃了红烧肉套餐，肉烂入味，推荐大家去试试！");
+                    //postDao.insert(p);
 
 
                     System.out.println("数据库已创建，示例数据已插入");
@@ -110,7 +122,7 @@ public abstract class AppDatabase extends RoomDatabase {
         };
 
     /** 构建示例食品数据 */
-    private static List<Food> buildSampleFoods() {
+    /*private static List<Food> buildSampleFoods() {
         List<Food> list = new ArrayList<>();
 
         list.add(new Food(
@@ -157,5 +169,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
         System.out.println("构建了 " + list.size() + " 条示例食品数据");
         return list;
-    }
+    }*/
 }

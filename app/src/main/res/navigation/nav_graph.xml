@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/foodFragment">
+
+    <fragment
+        android:id="@+id/foodFragment"
+        android:name="com.example.canteen.controller.FoodFragment"
+        android:label="@string/tab_food"
+        tools:layout="@layout/fragment_food">
+        <action
+            android:id="@+id/action_foodFragment_to_foodDetailFragment"
+            app:destination="@id/foodDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/foodDetailFragment"
+        android:name="com.example.canteen.controller.FoodDetailFragment"
+        android:label="@string/food_detail_title"
+        tools:layout="@layout/fragment_food_detail" />
+
+
+    <fragment
+        android:id="@+id/channelFragment"
+        android:name="com.example.canteen.controller.ChannelFragment"
+        android:label="频道"
+        tools:layout="@layout/fragment_channel">
+        <action
+            android:id="@+id/action_channelFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_channelFragment_to_postCreateFragment"
+            app:destination="@id/postCreateFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.example.canteen.controller.PostDetailFragment"
+        android:label="帖子详情"
+        tools:layout="@layout/fragment_post_detail">
+        <argument
+            android:name="postId"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postCreateFragment"
+        android:name="com.example.canteen.controller.PostCreateFragment"
+        android:label="发帖"
+        tools:layout="@layout/fragment_post_create">
+
+        <action
+            android:id="@+id/action_postCreateFragment_to_foodSelectFragment"
+            app:destination="@id/foodSelectFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/foodSelectFragment"
+        android:name="com.example.canteen.controller.FoodSelectFragment"
+        android:label="公告"
+        tools:layout="@layout/fragment_food_select" />
+
+    <fragment
+        android:id="@+id/foodWheelFragment"
+        android:name="com.example.canteen.controller.FoodWheelFragment"
+        android:label="@string/tab_what_to_eat"
+        tools:layout="@layout/fragment_food_wheel" />
+
+
+    <fragment
+        android:id="@+id/cookingFrameworkFragment"
+        android:name="com.example.canteen.controller.CookingFrameworkFragment"
+        android:label="做饭"
+        tools:layout="@layout/fragment_cooking_framework">
+
+        <action
+            android:id="@+id/action_cookingFrameworkFragment_to_contributeRecipeFragment"
+            app:destination="@id/contributeRecipeFragment" />
+
+        <action
+            android:id="@+id/action_cookingFrameworkFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.example.canteen.controller.RecipeDetailFragment"
+        android:label="食谱详情"
+        tools:layout="@layout/fragment_recipe_detail">
+        <argument
+            android:name="recipeId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/contributeRecipeFragment"
+        android:name="com.example.canteen.controller.ContributeRecipeFragment"
+        android:label="贡献食谱"
+        tools:layout="@layout/fragment_contribute_recipe" />
+
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.canteen.controller.ProfileFragment"
+        android:label="个人"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_postFeedFragment"
+            app:destination="@id/postFeedFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postFeedFragment"
+        android:name="com.example.canteen.controller.PostFeedFragment"
+        android:label="帖子列表"
+        tools:layout="@layout/fragment_post_feed">
+
+        <argument
+            android:name="feedType"
+            app:argType="string"
+            android:defaultValue="MY_POSTS" />
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="帖子列表" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.canteen.controller.SettingsFragment"
+        android:label="设置"
+        tools:layout="@layout/fragment_settings"/>
+    <!--
+    <fragment
+        android:id="@+id/cookFragment"
+        android:name="com.example.canteen.controller.CookFragment"
+        android:label="@string/tab_cooking"
+        tools:layout="@layout/fragment_page" />
+        -->
+    <!--
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.canteen.controller.ProfileFragment"
+        android:label="@string/tab_profile"
+        tools:layout="@layout/fragment_page" />
+        -->
+</navigation>

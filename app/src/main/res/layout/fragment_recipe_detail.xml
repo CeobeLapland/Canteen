@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF7ED"
+    android:fillViewport="true"
+    tools:context="com.example.canteen.controller.FoodDetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="#FFE7C1"
+            android:foregroundGravity="center"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="图片展示占位"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#8A4B00"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#7A3C00"
+            tools:text="红烧土豆" />
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="15sp"
+            android:textColor="#8A5A2B"
+            tools:text="这是一道简单又下饭的家常菜。" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="食材"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="#C56200" />
+
+        <TextView
+            android:id="@+id/tvIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="#5B3A00"
+            android:textSize="14sp"
+            tools:text="土豆，盐，酱油，葱花" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="步骤"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="#C56200" />
+
+        <TextView
+            android:id="@+id/tvSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="#5B3A00"
+            android:textSize="14sp"
+            tools:text="1. 切块\n2. 炒香\n3. 加水炖煮" />
+
+        <TextView
+            android:id="@+id/tvStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textColor="#9A6400"
+            android:textSize="13sp"
+            tools:text="👍 12   👎 1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="18dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLike"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="喜欢"
+                android:textColor="@android:color/white"
+                app:backgroundTint="#F28C28" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDislike"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:text="不喜欢"
+                android:textColor="#C96A00"
+                app:backgroundTint="#FFF0DD"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F28C28" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

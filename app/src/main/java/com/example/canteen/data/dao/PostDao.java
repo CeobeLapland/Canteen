@@ -11,9 +11,11 @@ import androidx.room.Update;
 
 import java.util.List;
 import com.example.canteen.data.entity.Post;
-import com.example.canteen.data.entity.PostWithFoods;
-import com.example.canteen.data.entity.PostWithComments;
-import com.example.canteen.data.entity.FoodPostCrossRef;
+import com.example.canteen.data.entity.mid.PostWithFoods;
+import com.example.canteen.data.entity.mid.PostWithComments;
+import com.example.canteen.data.entity.mid.FoodPostCrossRef;
+
+import io.reactivex.rxjava3.core.Single;
 
 /**帖子数据访问对象（DAO）*/
 @Dao
@@ -32,31 +34,37 @@ public interface PostDao {
 	void delete(Post post);
 
 	@Query("SELECT * FROM posts ORDER BY created_at DESC")
-	LiveData<List<Post>> getAllPosts();
+	Single<List<Post>> getAllPosts();
+
+
+	@Query("SELECT * FROM posts ORDER BY created_at DESC LIMIT :pageSize OFFSET :offset")
+	Single<List<Post>> getPostsByTimeAsc(int pageSize, int offset);
+
+
 
 	@Query("SELECT * FROM posts WHERE id = :id LIMIT 1")
-	LiveData<Post> getPostById(int id);
+	Single<Post> getPostById(int id);
 
 	@Query("SELECT * FROM posts WHERE author_name = :author ORDER BY created_at DESC")
-	LiveData<List<Post>> getPostsByAuthor(String author);
+	Single<List<Post>> getPostsByAuthor(String author);
 
 	// ---- 关联查询（Post <-> Food 多对多） ----
 	@Transaction
 	@Query("SELECT * FROM posts WHERE id = :postId")
-	LiveData<PostWithFoods> getPostWithFoods(int postId);
+	Single<PostWithFoods> getPostWithFoods(int postId);
 
 	@Transaction
 	@Query("SELECT * FROM posts ORDER BY created_at DESC")
-	LiveData<List<PostWithFoods>> getAllPostsWithFoods();
+	Single<List<PostWithFoods>> getAllPostsWithFoods();
 
 	// ---- 关联查询（Post -> Comment 一对多） ----
 	@Transaction
 	@Query("SELECT * FROM posts WHERE id = :postId")
-	LiveData<PostWithComments> getPostWithComments(int postId);
+	Single<PostWithComments> getPostWithComments(int postId);
 
 	@Transaction
 	@Query("SELECT * FROM posts ORDER BY created_at DESC")
-	LiveData<List<PostWithComments>> getAllPostsWithComments();
+	Single<List<PostWithComments>> getAllPostsWithComments();
 
 	// ---- 中间表操作 ----
 	@Insert(onConflict = OnConflictStrategy.IGNORE)

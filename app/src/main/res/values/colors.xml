@@ -7,8 +7,8 @@
     <color name="accent">#FF6F00</color>             <!-- 橙色强调 -->
 
     <!-- ── 文字颜色 ────────────────────────────────────── -->
-    <color name="text_primary">#212121</color>       <!-- 主要文字（近黑） -->
-    <color name="text_secondary">#616161</color>     <!-- 次要文字（灰） -->
+    <!--<color name="text_primary">#212121</color>-->       <!-- 主要文字（近黑） -->
+    <!--<color name="text_secondary">#616161</color>-->     <!-- 次要文字（灰） -->
     <color name="text_hint">#9E9E9E</color>          <!-- 提示文字（浅灰） -->
 
     <!-- ── 功能色 ──────────────────────────────────────── -->
@@ -28,4 +28,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="orange_primary">#FF8A00</color>
+    <color name="orange_primary_dark">#E56F00</color>
+    <color name="orange_secondary">#FFB347</color>
+
+    <color name="page_bg">#FFF4E6</color>
+    <color name="text_primary">#3B2A1A</color>
+    <color name="text_secondary">#6B4E2E</color>
+
+    <color name="nav_unselected">#8A6A4A</color>
+
+    <color name="orange_deep_fallback">#FF5722</color> <!-- 深橙色备用 -->
 </resources>

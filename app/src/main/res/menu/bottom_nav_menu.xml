@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 底部导航菜单 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 食品查询 Tab -->
-    <item
-        android:id="@+id/nav_food"
-        android:icon="@android:drawable/ic_menu_agenda"
-        android:title="食品查询"
-        android:orderInCategory="1"/>
+<item
+    android:id="@+id/foodFragment"
+    android:title="@string/tab_food" />
 
-    <!-- 帖子广场 Tab -->
-    <item
-        android:id="@+id/nav_post"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="帖子广场"
-        android:orderInCategory="2"/>
+<item
+    android:id="@+id/channelFragment"
+    android:title="@string/tab_channel" />
+
+<item
+    android:id="@+id/foodWheelFragment"
+    android:title="@string/tab_what_to_eat" />
+
+<item
+    android:id="@+id/cookingFrameworkFragment"
+    android:title="@string/tab_cooking" />
+
+<item
+    android:id="@+id/profileFragment"
+    android:title="@string/tab_profile" />
 
 </menu>
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+ 底部导航菜单
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+ 食品查询 Tab
+<item
+    android:id="@+id/nav_food"
+    android:icon="@android:drawable/ic_menu_agenda"
+    android:title="食品查询"
+    android:orderInCategory="1"/>
+
+ 帖子广场 Tab
+<item
+    android:id="@+id/nav_post"
+    android:icon="@android:drawable/ic_menu_edit"
+    android:title="帖子广场"
+    android:orderInCategory="2"/>
+
+</menu>
+-->
